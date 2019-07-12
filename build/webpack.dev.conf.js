@@ -9,42 +9,59 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
-const express = require("express")
+
+const express = require('express')
+const app = express()   //创建express应用程序
+var appData = require('../data.json')//加载本地数据文件
+var seller = appData.seller//获取对应的本地数据
+var goods = appData.goods
+var ratings = appData.ratings
+var apiRoutes = express.Router()  // 获取一个 express 的路由实例
+app.use('/api', apiRoutes)
+
+
+
+
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
-let app = express();
-var appData = require("../data.json")
 
-let seller = appData.seller;
-let goods = appData.goods;
-let ratings = appData.ratings;
 
-let apiRoutes = express.Router();
-apiRoutes.get("/seller",function(req,res){
-  console.log("appData",res)
-  res.json({
-    errno:0,
-    data:seller
-  })
-})
 
-apiRoutes.get("/goods",function(res,req){
-  res.json({
-    errno:0,
-    data:goods
-  })
-})
+//const express = require("express")
+// let app = express();
+// var appData = require("../data.json")
 
-apiRoutes.get("/ratings",function(res,req){
-  res,json({
-    errno:0,
-    data:ratings
-  })
-})
+// let seller = appData.seller;
+// let goods = appData.goods;
+// let ratings = appData.ratings;
 
-app.use("/api",apiRoutes);
+// let apiRoutes = express.Router();
+
+// apiRoutes.get("/seller",function(req,res){
+//   console.log("appData",res)
+//   res.json({
+//     errno:0,
+//     data:seller
+//   })
+// })
+
+// apiRoutes.get("/goods",function(res,req){
+//   res.json({
+//     errno:0,
+//     data:goods
+//   })
+// })
+
+// apiRoutes.get("/ratings",function(res,req){
+//   res.json({
+//     errno:0,
+//     data:ratings
+//   })
+// })
+
+// app.use("/api",apiRoutes);
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
@@ -74,7 +91,28 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
       poll: config.dev.poll,
+    },
+    before(app) {
+      app.get('/api/seller', (req, res) => {
+        res.json({
+          errno: 0,
+          data: seller
+        })//接口返回json数据，上面配置的数据seller就赋值给data请求后调用
+      }),
+      app.get('/api/goods', (req, res) => {
+        res.json({
+          errno: 0,
+          data: goods
+        })
+      }),
+      app.get('/api/ratings', (req, res) => {
+        res.json({
+          errno: 0,
+          data: ratings
+        })
+      })
     }
+
   },
   plugins: [
     new webpack.DefinePlugin({
