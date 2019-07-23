@@ -9,15 +9,17 @@
     "url": "https://github.com/huangyuhui123/elema.git"
   },
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "webpack-dev-server --inline --host 0.0.0.0 --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "lint": "eslint --ext .js,.vue src",
     "build": "node build/build.js"
   },
   "dependencies": {
+    "axios": "^0.19.0",
     "express": "^4.17.1",
-    "vue-router": "^3.0.7",
-    "vue": "^2.5.2"
+    "vue": "^2.5.2",
+    "vue-axios": "^2.1.4",
+    "vue-router": "^3.0.7"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
